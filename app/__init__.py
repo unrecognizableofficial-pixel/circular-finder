@@ -1,0 +1,1 @@
+"""Circular Finder application package."""

@@ -1,0 +1,45 @@
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-sand-50 text-stone-900 antialiased;
+  background-image:
+    radial-gradient(circle at top, rgba(199, 215, 196, 0.35), transparent 30%),
+    linear-gradient(180deg, rgba(252, 251, 247, 1) 0%, rgba(246, 242, 233, 0.98) 100%);
+}
+
+* {
+  @apply border-stone-200;
+}
+
+.glass-surface {
+  @apply bg-white/85 backdrop-blur-xl;
+}
+
+.dashboard-grid {
+  @apply grid gap-4;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

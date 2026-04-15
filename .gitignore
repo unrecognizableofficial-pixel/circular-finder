@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.codex/
+circular_finder.db
+test_circular_finder.db
+app/static/uploads/*
+!/app/static/uploads/.gitkeep
+frontend/node_modules/
+frontend/.next/
+frontend/.next.restart-*/
+frontend/.env.local

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="apple-touch-icon" href="/static/favicon.svg" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="brand-lockup">
+          <span class="brand-mark">CF</span>
+          <div>
+            <p class="eyebrow">Circular Fashion Intelligence</p>
+            <h1>Circular Finder</h1>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="#platform-features">Features</a>
+          <a href="#scanner">Scanner</a>
+          <a href="#map">Map</a>
+          <a href="#wardrobe">Dashboard</a>
+          <a href="#marketplace">Marketplace</a>
+          <a href="#brands">Brands</a>
+          <a href="#auth-access">Access</a>
+          <a id="admin-nav-link" class="hidden" href="#admin-panel">Admin</a>
+        </nav>
+        <div class="header-actions">
+          <a href="#auth-access" class="button button-secondary">Account Access</a>
+          <button id="logout-button" class="button button-ghost hidden">Log Out</button>
+        </div>
+      </header>
+
+      <div class="app-frame">
+        <main id="main-content">
+          <section class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow">Circular Fashion Platform</p>
+              <h2>Circular Finder</h2>
+              <p class="hero-subtitle">Bridging ethical manufacturing with conscious consumers</p>
+              <p class="hero-text">
+                Discover transparency through our Digital Product Passport scanner and reduce returns with AI-powered virtual styling.
+              </p>
+              <div class="hero-actions">
+                <a href="#scanner" class="button">Start Your Circular Journey</a>
+              </div>
+            </div>
+            <div class="hero-panel">
+              <div class="hero-stat-grid" id="hero-stat-grid">
+                <article class="hero-stat">
+                  <span>Verified passports</span>
+                  <strong id="hero-passport-count">0</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Transparent suppliers</span>
+                  <strong id="hero-supplier-count">0</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Resale listings</span>
+                  <strong id="hero-listing-count">0</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Known brands</span>
+                  <strong id="hero-brand-count">0</strong>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section id="platform-features" class="section-grid feature-showcase">
+            <div class="section-heading section-heading-centered">
+              <h3>Platform Features</h3>
+              <p>Empowering sustainable fashion choices through technology</p>
+            </div>
+            <div class="feature-card-grid">
+              <article class="card feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 8h4V4H4v4Zm6 12h4v-4h-4v4Zm6-6h4v-4h-4v4ZM4 20h4v-4H4v4Zm12-8h4V8h-4v4ZM10 14h4v-4h-4v4Z" />
+                  </svg>
+                </div>
+                <h4>Digital Product Passport Scanner</h4>
+                <p>Scan any garment to reveal its complete journey from raw materials to manufacturing processes, ensuring full transparency in your fashion choices.</p>
+              </article>
+              <article class="card feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="m12 3 1.7 3.7L18 8.4l-3.2 2.9.9 4.3L12 13.6 8.3 15.6l.9-4.3L6 8.4l4.3-1.7L12 3Z" />
+                  </svg>
+                </div>
+                <h4>AI Virtual Styling Tool</h4>
+                <p>Reduce returns and discover your perfect style with our AI-powered virtual fitting room that learns your preferences and body type.</p>
+              </article>
+              <article class="card feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3a8.9 8.9 0 1 0 0 17.8A8.9 8.9 0 0 0 12 3Zm0 0c2.1 2 3.3 4.5 3.6 9-.3 4.5-1.5 7-3.6 8.8M12 3C9.9 5 8.7 7.5 8.4 12c.3 4.5 1.5 7 3.6 8.8M4 12h16M5.9 7.5h12.2M5.9 16.5h12.2" />
+                  </svg>
+                </div>
+                <h4>Supplier Transparency Map</h4>
+                <p>Explore our interactive global map showcasing ethical suppliers, their certifications, and sustainability practices across the fashion supply chain.</p>
+              </article>
+              <article class="card feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M5 19V9m7 10V5m7 14v-7" />
+                  </svg>
+                </div>
+                <h4>Your Sustainable Dashboard</h4>
+                <p>Track your circular fashion journey and impact with wardrobe analytics tailored to how you buy, wear, repair, and resell.</p>
+              </article>
+              <article class="card feature-card">
+                <div class="feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 8V7a5 5 0 0 1 10 0v1m-9 0h8l1 11H7L8 8Z" />
+                  </svg>
+                </div>
+                <h4>Circular Marketplace</h4>
+                <p>Give your garments a second life through our curated resale platform designed to keep verified products moving through the circular economy.</p>
+              </article>
+            </div>
+          </section>
+
+          <section id="scanner" class="section-grid scanner-screen">
+            <div class="section-heading">
+              <p class="eyebrow">Digital Product Passport System</p>
+              <h3>Scan any garment to reveal its complete journey.</h3>
+              <p>
+                Reveal the path from raw materials to manufacturing processes, then unlock transparency data, repair guidance, circularity scoring, and resale eligibility in one flow.
+              </p>
+            </div>
+            <div class="section-columns">
+              <div class="card scanner-card">
+                <div class="scanner-controls">
+                  <label>
+                    Known brand
+                    <select id="brand-selector"></select>
+                  </label>
+                  <label>
+                    Scan or style hints
+                    <input id="scan-hints" type="text" placeholder="sage trench, denim, logo, barcode value" />
+                  </label>
+                  <label>
+                    Direct passport / code lookup
+                    <input id="scan-code" type="text" placeholder="QR-EL-TRN-001 or 880100010001" />
+                  </label>
+                </div>
+                <div class="scanner-actions">
+                  <button id="start-camera-button" class="button">Start Camera</button>
+                  <button id="capture-scan-button" class="button button-secondary">Capture &amp; Scan</button>
+                  <button id="lookup-code-button" class="button button-ghost">Lookup Code</button>
+                  <button id="upload-image-button" class="button button-ghost">Upload Garment Image</button>
+                </div>
+                <div class="camera-shell">
+                  <video id="scanner-video" playsinline muted></video>
+                  <canvas id="scanner-canvas" class="hidden"></canvas>
+                </div>
+                <input id="scan-file-input" class="hidden" type="file" accept="image/*" />
+                <div class="scan-meta-grid">
+                  <article class="mini-card">
+                    <span>Supported inputs</span>
+                    <strong>Camera, QR, barcode, NFC, upload, AI</strong>
+                  </article>
+                  <article class="mini-card">
+                    <span>Brand discovery</span>
+                    <strong>Known passports plus new brand verification</strong>
+                  </article>
+                </div>
+              </div>
+              <div class="card passport-card">
+                <div class="passport-header">
+                  <div>
+                    <p class="eyebrow">Passport Output</p>
+                    <h4 id="passport-title">No garment scanned yet</h4>
+                  </div>
+                  <div id="passport-status-badge" class="pill">Waiting for scan</div>
+                </div>
+                <div id="passport-result" class="passport-result empty-state" aria-live="polite">
+                  Start the camera, scan a code, or upload an image to retrieve the digital passport.
+                </div>
+                <div class="scanner-footer-actions">
+                  <button id="add-wardrobe-button" class="button button-secondary">Add To Wardrobe</button>
+                  <button id="open-listing-button" class="button button-ghost">List For Resale</button>
+                  <button id="learn-brand-button" class="button button-ghost">Learn New Brand Via Verification</button>
+                </div>
+                <p class="form-note">Scanner results are public. Saving to wardrobe, resale, and verification submissions will guide you to sign in when needed.</p>
+              </div>
+            </div>
+
+            <div id="verification" class="card verification-card">
+              <div class="verification-copy">
+                <p class="eyebrow">Verification Pipeline</p>
+                <h4>Unrecognized products, suppliers, and new brands enter moderation before they become official.</h4>
+                <p>
+                  Upload and sell flows are gated by passport verification. If a product is missing from the database, submit it here with supporting evidence and it will move into the admin review queue.
+                </p>
+              </div>
+              <form id="verification-form" class="verification-form">
+                <input name="request_type" type="hidden" value="product_passport" />
+                <input name="image_url" type="hidden" value="" />
+                <label>
+                  Product name
+                  <input name="product_name" type="text" placeholder="Juniper Modular Coat" required />
+                </label>
+                <label>
+                  Brand name
+                  <input name="brand_name" type="text" placeholder="Juniper Trace" required />
+                </label>
+                <label>
+                  Brand website
+                  <input name="brand_website" type="url" placeholder="https://brand.example" />
+                </label>
+                <label>
+                  Target demographic
+                  <select name="target_demographic">
+                    <option value="">Select demographic</option>
+                    <option>Women</option>
+                    <option>Men</option>
+                    <option>Unisex</option>
+                    <option>Gen Z</option>
+                    <option>Professionals</option>
+                    <option>Outdoor</option>
+                  </select>
+                </label>
+                <label class="wide-field">
+                  Materials
+                  <input name="materials" type="text" placeholder="Organic cotton, recycled nylon" />
+                </label>
+                <label>
+                  Country of origin
+                  <input name="country_of_origin" type="text" placeholder="Portugal" />
+                </label>
+                <label class="wide-field">
+                  Notes
+                  <textarea name="notes" placeholder="What did the scan reveal? What should be verified?"></textarea>
+                </label>
+                <button type="submit" class="button">Submit For Verification</button>
+              </form>
+            </div>
+          </section>
+
+          <section id="map" class="section-grid map-screen">
+            <div class="section-heading">
+              <p class="eyebrow">Supplier Transparency Map</p>
+              <h3>Explore ethical suppliers and sustainability practices across the fashion supply chain.</h3>
+              <p>Filter the interactive global map by brand, region, certification, material, labor standard, or target demographic.</p>
+            </div>
+            <div class="card map-card">
+              <form id="map-filter-form" class="filter-grid">
+                <label>
+                  Brand
+                  <select id="map-brand-filter" name="brand"></select>
+                </label>
+                <label>
+                  Region
+                  <input id="map-region-filter" name="region" type="text" placeholder="Europe, Vietnam, North America" />
+                </label>
+                <label>
+                  Certification
+                  <input id="map-certification-filter" name="certification" type="text" placeholder="GOTS, B Corp, WRAP" />
+                </label>
+                <label>
+                  Material
+                  <input id="map-material-filter" name="material" type="text" placeholder="Organic Cotton, Wool" />
+                </label>
+                <label>
+                  Labor standard
+                  <input id="map-labor-filter" name="labor_standard" type="text" placeholder="Living wage, SA8000" />
+                </label>
+                <label>
+                  Demographic
+                  <select id="map-demographic-filter" name="demographic">
+                    <option value="">All demographics</option>
+                    <option>Women</option>
+                    <option>Men</option>
+                    <option>Unisex</option>
+                    <option>Gen Z</option>
+                    <option>Professionals</option>
+                    <option>Outdoor</option>
+                    <option>Minimalist</option>
+                  </select>
+                </label>
+                <div class="filter-actions">
+                  <button type="submit" class="button">Refresh Map</button>
+                  <button id="reset-map-button" type="button" class="button button-ghost">Reset Filters</button>
+                </div>
+              </form>
+              <div class="map-layout">
+                <div class="map-surface">
+                  <svg viewBox="0 0 1200 600" class="map-svg" aria-hidden="true">
+                    <g class="map-continents">
+                      <path d="M100 165c43-44 100-74 164-82 74-8 140 8 178 44 16 16 42 27 69 31 22 4 34 15 34 31 0 24-35 32-62 42-37 13-53 30-53 56 0 35-31 63-69 63-41 0-69-21-88-63-11-25-23-39-45-49-37-19-77-38-86-80-5-20 8-34 23-53 9-11 16-28 35-40z" />
+                      <path d="M548 107c34-19 94-12 133 18 24 18 32 47 22 82-5 18 6 30 34 40 41 15 64 37 70 69 6 35-14 60-52 79-33 17-44 41-34 72 9 31-4 55-35 65-49 16-94-6-109-53-10-33-28-47-57-47-28 0-46-14-57-46-15-43-52-79-104-100-24-10-33-27-28-52 6-26 32-35 56-47 27-13 43-30 52-58 15-46 65-63 109-22z" />
+                      <path d="M822 171c28-25 75-29 116-12 28 12 48 32 52 54 5 22 24 40 56 55 47 22 72 53 72 90 0 48-42 81-107 87-38 3-60 15-72 39-18 37-47 55-87 55-56 0-97-35-97-83 0-30-16-52-46-67-42-21-57-46-47-79 8-25 28-42 63-53 25-8 39-23 45-47 7-23 23-31 52-39z" />
+                    </g>
+                  </svg>
+                  <div id="map-nodes"></div>
+                </div>
+                <div class="map-sidebar">
+                  <div class="map-summary" id="map-summary" aria-live="polite">
+                    Select a supplier node to inspect certifications, associated brands, and labor standards.
+                  </div>
+                  <div id="map-details" class="map-details"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="wardrobe" class="section-grid dashboard-screen">
+            <div class="dashboard-hero">
+              <div class="section-heading section-heading-centered">
+                <h3>Your Sustainable Dashboard</h3>
+                <p>Track your circular fashion journey and impact</p>
+              </div>
+              <div class="dashboard-grid">
+                <div class="card insights-card">
+                  <div class="dashboard-header">
+                    <div>
+                      <p class="eyebrow">Wardrobe Analytic</p>
+                      <h4>Monitor your sustainable fashion choices</h4>
+                    </div>
+                    <button id="refresh-wardrobe-button" class="button button-secondary">Refresh Insights</button>
+                  </div>
+                  <div id="wardrobe-insights" class="stats-grid empty-state">Sign in to unlock wardrobe analytics.</div>
+                </div>
+                <div class="card outfits-card">
+                  <div class="dashboard-header">
+                    <div>
+                      <p class="eyebrow">AI Styling Engine</p>
+                      <h4>Reduce returns and discover your perfect style</h4>
+                    </div>
+                    <button id="generate-outfits-button" class="button button-ghost">Generate Outfits</button>
+                  </div>
+                  <div id="outfit-suggestions" class="outfit-grid empty-state">Your styling suggestions will appear here.</div>
+                </div>
+              </div>
+            </div>
+            <div class="card wardrobe-card">
+              <div class="dashboard-header">
+                <div>
+                  <p class="eyebrow">Wardrobe Inventory</p>
+                  <h4>Wear tracking, repair tracking, resale readiness, and circularity notes</h4>
+                </div>
+              </div>
+              <div id="wardrobe-list" class="wardrobe-list empty-state">Sign in and add verified pieces from the scanner.</div>
+            </div>
+          </section>
+
+          <section id="marketplace" class="section-grid marketplace-screen">
+            <div class="section-heading section-heading-centered">
+              <h3>Circular Marketplace</h3>
+              <p>Give your garments a second life through our curated resale platform</p>
+            </div>
+            <div class="marketplace-layout">
+              <div class="card marketplace-browser">
+                <form id="marketplace-filter-form" class="filter-grid compact-filter-grid">
+                  <label>
+                    Search listings
+                    <input id="marketplace-search" name="search" type="text" placeholder="dress, denim, tote" />
+                  </label>
+                  <label>
+                    Brand
+                    <select id="marketplace-brand-filter" name="brand"></select>
+                  </label>
+                  <div class="filter-actions">
+                    <button type="submit" class="button">Filter Listings</button>
+                  </div>
+                </form>
+                <div id="marketplace-list" class="marketplace-grid"></div>
+              </div>
+              <div class="card listing-card">
+                <div class="dashboard-header">
+                  <div>
+                    <p class="eyebrow">List An Item</p>
+                    <h4>Passport verification is required before a product can be sold.</h4>
+                  </div>
+                </div>
+                <p id="listing-access-note" class="form-note">Sign in to create verified listings.</p>
+                <form id="listing-form" class="listing-form">
+                  <label>
+                    Passport ID
+                    <input name="passport_id" type="text" placeholder="DPP-EL-TRN-001" required />
+                  </label>
+                  <label>
+                    Wardrobe item ID
+                    <input name="wardrobe_item_id" type="number" placeholder="Optional if already in wardrobe" />
+                  </label>
+                  <label>
+                    Listing title
+                    <input name="title" type="text" placeholder="Sage Meridian Trench, verified passport included" required />
+                  </label>
+                  <label>
+                    Size
+                    <input name="size_label" type="text" placeholder="M" required />
+                  </label>
+                  <label>
+                    Condition
+                    <select name="condition" required>
+                      <option>new</option>
+                      <option selected>excellent</option>
+                      <option>good</option>
+                      <option>fair</option>
+                      <option>repairable</option>
+                    </select>
+                  </label>
+                  <label>
+                    Price
+                    <input name="price" type="number" min="0" step="0.01" placeholder="180" required />
+                  </label>
+                  <label class="wide-field">
+                    Description
+                    <textarea name="description" placeholder="Condition notes, styling notes, repair history"></textarea>
+                  </label>
+                  <button type="submit" class="button">Create Verified Listing</button>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <section id="brands" class="section-grid brands-screen">
+            <div class="section-heading">
+              <p class="eyebrow">Brand Transparency Database</p>
+              <h3>Search known digital passport brands, filter by demographic, and route new discoveries into verification.</h3>
+              <p>Brands can also connect through the passport API to publish product data and QR-ready passport records.</p>
+            </div>
+            <div class="brand-layout">
+              <div class="card brand-browser">
+                <form id="brand-filter-form" class="filter-grid compact-filter-grid">
+                  <label>
+                    Brand search
+                    <input id="brand-search" name="search" type="text" placeholder="Aureline, Eterna Loom" />
+                  </label>
+                  <label>
+                    Demographic
+                    <select id="brand-demographic-filter" name="demographic">
+                      <option value="">All demographics</option>
+                      <option>Women</option>
+                      <option>Men</option>
+                      <option>Unisex</option>
+                      <option>Gen Z</option>
+                      <option>Professionals</option>
+                      <option>Outdoor</option>
+                      <option>Minimalist</option>
+                    </select>
+                  </label>
+                  <div class="filter-actions">
+                    <button type="submit" class="button">Search Brands</button>
+                  </div>
+                </form>
+                <div id="brand-list" class="brand-list"></div>
+              </div>
+              <div class="card brand-api-card">
+                <p class="eyebrow">Brand Digital Passport API</p>
+                <h4>Server-to-server integration for product uploads, QR generation, and supply chain records</h4>
+                <p>
+                  Verified brands can submit passports programmatically using the protected API. Known brand keys are seeded in the backend for local development and can be rotated in production.
+                </p>
+                <pre class="code-block" id="brand-api-code">POST /api/brands/api/passports
+X-Brand-Key: brand_eternaloom_dev_key
+Content-Type: application/json</pre>
+                <button id="copy-api-button" class="button button-secondary">Copy API Example</button>
+                <div id="brand-api-status" class="api-status">Ready for integrations</div>
+              </div>
+            </div>
+          </section>
+
+          <section id="auth-access" class="section-grid auth-screen">
+            <div class="section-heading">
+              <p class="eyebrow">Access &amp; Sign In</p>
+              <h3>Unlock wardrobe saving, resale actions, verification submissions, and moderation tools.</h3>
+              <p>Browse public product intelligence freely, then sign in with your account when you want to create, save, or govern data.</p>
+            </div>
+            <div class="auth-strip">
+              <div class="card auth-card">
+                <div class="auth-card-copy">
+                  <p class="eyebrow">Session Status</p>
+                  <h4>Personal wardrobe intelligence with role-based admin access</h4>
+                  <p>Use your production account to manage wardrobe impact, verified resale listings, and moderation access.</p>
+                  <div class="demo-chip-row">
+                    <span class="brand-pill">Live wardrobe impact</span>
+                    <span class="brand-pill">Verified supplier intelligence</span>
+                    <span class="brand-pill">Production moderation tools</span>
+                  </div>
+                </div>
+                <div id="auth-status" class="auth-status" role="status" aria-live="polite">Not signed in</div>
+              </div>
+              <div class="card access-card">
+                <div class="access-copy">
+                  <p class="eyebrow">Feature Access</p>
+                  <h4>Every workflow is one jump away</h4>
+                  <p>Choose the path you want and the app will guide you to the right sign-in state if a feature requires it.</p>
+                </div>
+                <div class="access-grid">
+                  <a class="access-item" href="#scanner">
+                    <strong>Passport Scanner</strong>
+                    <span>Camera, QR, barcode, NFC, and image upload flows.</span>
+                    <small>Open to everyone</small>
+                  </a>
+                  <a class="access-item" href="#verification">
+                    <strong>Verification Pipeline</strong>
+                    <span>Submit unrecognized garments, brands, and supply chain evidence.</span>
+                    <small>Sign in to submit</small>
+                  </a>
+                  <a class="access-item" href="#wardrobe">
+                    <strong>Dashboard</strong>
+                    <span>Refresh analytics, log wear and repair events, and generate outfits.</span>
+                    <small>Sign in required</small>
+                  </a>
+                  <a class="access-item" href="#marketplace">
+                    <strong>Marketplace</strong>
+                    <span>Browse public listings or create one from a passport-backed item.</span>
+                    <small>Browse public, sign in to buy or list</small>
+                  </a>
+                  <a id="admin-access-link" class="access-item" href="#auth-access">
+                    <strong>Admin Moderation</strong>
+                    <span>Review pending submissions before they enter the verified platform database.</span>
+                    <small id="admin-access-state">Admin account required</small>
+                  </a>
+                </div>
+              </div>
+              <div class="auth-forms">
+                <form id="login-form" class="card compact-form">
+                  <h4>Sign In</h4>
+                  <label>
+                    Email
+                    <input type="email" name="email" placeholder="name@company.com" required />
+                  </label>
+                  <label>
+                    Password
+                    <input type="password" name="password" placeholder="Enter your password" required />
+                  </label>
+                  <button type="submit" class="button">Sign In</button>
+                </form>
+                <form id="register-form" class="card compact-form">
+                  <h4>Create Account</h4>
+                  <label>
+                    Full name
+                    <input type="text" name="full_name" placeholder="Jamie Rivera" required />
+                  </label>
+                  <label>
+                    Email
+                    <input type="email" name="email" placeholder="jamie@example.com" required />
+                  </label>
+                  <label>
+                    Password
+                    <input type="password" name="password" placeholder="At least 8 characters" required />
+                  </label>
+                  <button type="submit" class="button button-secondary">Create Account</button>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <section id="admin-panel" class="section-grid admin-screen hidden">
+            <div class="section-heading">
+              <p class="eyebrow">Admin Panel</p>
+              <h3>Review pending passport, brand, and supplier submissions before they enter the verified database.</h3>
+              <p>Only admin users can access moderation and platform governance tools.</p>
+            </div>
+            <div class="card admin-card">
+              <div class="dashboard-header">
+                <div>
+                  <p class="eyebrow">Moderation Queue</p>
+                  <h4>Verification requests awaiting decision</h4>
+                </div>
+                <button id="refresh-admin-button" class="button">Refresh Queue</button>
+              </div>
+              <div id="admin-queue" class="admin-queue"></div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/static/app.js"></script>
+  </body>
+</html>
