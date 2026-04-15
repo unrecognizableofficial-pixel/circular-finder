@@ -1,11 +1,23 @@
 import type { BootstrapPayload, MarketplaceListing, Passport, Supplier, UserProfile, WardrobeItem, WardrobeInsights, Outfit } from "@/types/platform";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ?? "";
 
 type RequestOptions = RequestInit & {
   token?: string;
   params?: Record<string, string | number | boolean | undefined>;
 };
+
+function buildApiUrl(path: string) {
+  if (API_BASE_URL) {
+    return new URL(path, API_BASE_URL);
+  }
+
+  if (typeof window !== "undefined") {
+    return new URL(path, window.location.origin);
+  }
+
+  return new URL(path, "http://127.0.0.1:3000");
+}
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers = new Headers(options.headers || {});
@@ -19,7 +31,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers.set("Authorization", `Bearer ${options.token}`);
   }
 
-  const url = new URL(path, API_BASE_URL);
+  const url = buildApiUrl(path);
   if (options.params) {
     for (const [key, value] of Object.entries(options.params)) {
       if (value !== undefined && value !== "") {
