@@ -1,0 +1,1195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum RoleKey {
+  MASTER_BRAND_ADMIN
+  COMPLIANCE_ADMIN
+  SUB_BRAND_MANAGER
+  CREATOR
+  VENDOR
+  STANDARD_USER
+}
+
+enum AccountStatus {
+  ACTIVE
+  WARNING
+  FROZEN
+  SUSPENDED
+  REMOVED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+  REMOVED
+}
+
+enum ComplianceSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ComplianceActionType {
+  WARNING
+  CONTENT_SUPPRESSION
+  FREEZE
+  TRAINING_REQUIRED
+  SUSPENSION
+  PERMANENT_REMOVAL
+  RESTORE
+}
+
+enum TrainingFormat {
+  VIDEO
+  GUIDE
+  QUIZ
+  CERTIFICATION
+}
+
+enum NotificationType {
+  SYSTEM
+  FOLLOW
+  IMPACT
+  ORDER
+  COMPLIANCE
+  GOVERNANCE
+  SOCIAL
+  MARKETPLACE
+}
+
+enum ProductCondition {
+  NEW
+  EXCELLENT
+  GOOD
+  FAIR
+  REPAIRABLE
+}
+
+enum OrderStatus {
+  CART
+  CHECKOUT_PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum MediaAssetType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  CERTIFICATE
+  LOGO
+}
+
+enum SessionStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum ImpactPointType {
+  PURCHASE
+  RESALE
+  REPAIR
+  RECYCLING
+  PROFILE_COMPLETION
+  SOCIAL_ENGAGEMENT
+  CHALLENGE_COMPLETION
+  TRAINING_COMPLETION
+  SUSTAINABILITY_ACTION
+}
+
+enum SettingScope {
+  USER
+  BRAND
+  SUB_BRAND
+  PLATFORM
+}
+
+enum OrganizationPlan {
+  STARTER
+  GROWTH
+  ENTERPRISE
+  INVESTOR_MODE
+}
+
+enum PassportVerificationStatus {
+  PENDING
+  VERIFIED
+  FLAGGED
+}
+
+enum AgentTaskStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  BLOCKED
+}
+
+enum LegalDocumentStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+  ARCHIVED
+}
+
+model User {
+  id                     String               @id @default(cuid())
+  email                  String               @unique
+  passwordHash           String?
+  fullName               String
+  roleId                 String
+  googleId               String?              @unique
+  appleId                String?              @unique
+  emailVerifiedAt        DateTime?
+  status                 AccountStatus        @default(ACTIVE)
+  suspendedUntil         DateTime?
+  deletedAt              DateTime?
+  lastLoginAt            DateTime?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  role                   Role                 @relation(fields: [roleId], references: [id])
+  profile                Profile?
+  sessions               Session[]
+  posts                  Post[]               @relation("PostAuthor")
+  comments               Comment[]
+  likes                  Like[]
+  savedPosts             SavedPost[]
+  postShares             PostShare[]
+  followers              Follower[]           @relation("UserFollowers")
+  following              Follower[]           @relation("UserFollowing")
+  notifications          Notification[]
+  brandsOwned            Brand[]              @relation("BrandOwner")
+  managedSubBrands       SubBrand[]           @relation("SubBrandManager")
+  reviews                Review[]
+  impactPoints           ImpactPoint[]
+  leaderboardEntries     LeaderboardEntry[]
+  challengeProgress      ChallengeProgress[]
+  complianceEvents       ComplianceEvent[]    @relation("ComplianceSubject")
+  resolvedCompliance     ComplianceEvent[]    @relation("ComplianceResolver")
+  auditLogs              AuditLog[]           @relation("AuditActor")
+  trainingAssignments    TrainingAssignment[]
+  certifications         Certification[]
+  scanHistory            ScanHistory[]
+  settings               Setting[]
+  mediaAssets            MediaAsset[]         @relation("MediaOwner")
+  buyerOrders            Order[]              @relation("OrderBuyer")
+  sellerOrders           Order[]              @relation("OrderSeller")
+  ownedInventory         Inventory[]          @relation("InventoryVendor")
+  ownershipTransfersFrom OwnershipHistory[]   @relation("OwnershipFrom")
+  ownershipTransfersTo   OwnershipHistory[]   @relation("OwnershipTo")
+  analyticsEvents        AnalyticsEvent[]
+  wardrobeItems          WardrobeItemRecord[]
+  organizationsOwned     Organization[]       @relation("OrganizationOwner")
+
+  @@index([roleId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  key         RoleKey          @unique
+  name        String
+  description String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  users       User[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  resource    String
+  action      String
+  key         String           @unique
+  description String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  roles       RolePermission[]
+
+  @@index([resource, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  grantedAt    DateTime   @default(now())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Profile {
+  id                  String      @id @default(cuid())
+  userId              String      @unique
+  handle              String      @unique
+  displayName         String
+  bio                 String?
+  location            String?
+  avatarAssetId       String?      @unique
+  stylePreferences    Json?
+  sustainabilityFocus Json?
+  trustScore          Int         @default(50)
+  reputationScore     Int         @default(50)
+  impactPoints        Int         @default(0)
+  followersCount      Int         @default(0)
+  verified            Boolean     @default(false)
+  nearbyEnabled       Boolean     @default(true)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatarAsset         MediaAsset? @relation("ProfileAvatar", fields: [avatarAssetId], references: [id])
+
+  @@index([location])
+  @@index([reputationScore])
+  @@map("profiles")
+}
+
+model Follower {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followingId, createdAt])
+  @@map("followers")
+}
+
+model Post {
+  id              String       @id @default(cuid())
+  authorId        String
+  brandId         String?
+  subBrandId      String?
+  circularIdId    String?
+  mediaAssetId    String?
+  title           String?
+  caption         String
+  autoCaption     String?
+  qrCode          String?
+  cta             String?
+  status          PostStatus   @default(PUBLISHED)
+  engagementScore Int          @default(0)
+  riskScore       Int          @default(0)
+  likeCount       Int          @default(0)
+  commentCount    Int          @default(0)
+  shareCount      Int          @default(0)
+  saveCount       Int          @default(0)
+  publishedAt     DateTime?
+  deletedAt       DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  author          User         @relation("PostAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  brand           Brand?       @relation(fields: [brandId], references: [id])
+  subBrand        SubBrand?    @relation(fields: [subBrandId], references: [id])
+  circularId      CircularId?  @relation(fields: [circularIdId], references: [id])
+  mediaAsset      MediaAsset?  @relation("PostMedia", fields: [mediaAssetId], references: [id])
+  comments        Comment[]
+  likes           Like[]
+  saves           SavedPost[]
+  shares          PostShare[]
+  complianceEvents ComplianceEvent[]
+
+  @@index([authorId, createdAt])
+  @@index([brandId, status])
+  @@index([subBrandId, status])
+  @@index([publishedAt])
+  @@index([status, engagementScore])
+  @@map("posts")
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  postId     String
+  authorId   String
+  body       String
+  deletedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  postId     String
+  userId     String
+  createdAt  DateTime @default(now())
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId, createdAt])
+  @@map("likes")
+}
+
+model SavedPost {
+  id        String   @id @default(cuid())
+  postId     String
+  userId     String
+  createdAt  DateTime @default(now())
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("saved_posts")
+}
+
+model PostShare {
+  id         String   @id @default(cuid())
+  postId      String
+  userId      String
+  channel     String
+  createdAt   DateTime @default(now())
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@map("post_shares")
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId       String
+  type         NotificationType
+  title        String
+  body         String
+  payload      Json?
+  readAt       DateTime?
+  deliveredAt  DateTime?
+  createdAt    DateTime         @default(now())
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+  @@map("notifications")
+}
+
+model Brand {
+  id                  String        @id @default(cuid())
+  ownerId             String?
+  organizationId      String?
+  name                String
+  slug                String        @unique
+  description         String?
+  website             String?
+  governanceScore     Int           @default(85)
+  sustainabilityScore Int           @default(80)
+  trustScore          Int           @default(80)
+  verified            Boolean       @default(true)
+  deletedAt           DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  owner               User?         @relation("BrandOwner", fields: [ownerId], references: [id])
+  organization        Organization? @relation(fields: [organizationId], references: [id])
+  subBrands           SubBrand[]
+  presets             BrandPreset[]
+  products            Product[]
+  posts               Post[]
+  complianceEvents    ComplianceEvent[]
+  settings            Setting[]
+  mediaAssets         MediaAsset[]  @relation("BrandAssets")
+  analyticsEvents     AnalyticsEvent[]
+
+  @@index([ownerId])
+  @@index([organizationId])
+  @@index([verified, governanceScore])
+  @@map("brands")
+}
+
+model SubBrand {
+  id               String             @id @default(cuid())
+  brandId          String
+  managerId        String?
+  name             String
+  slug             String             @unique
+  description      String?
+  verified         Boolean            @default(true)
+  complianceScore  Int                @default(92)
+  riskScore        Int                @default(8)
+  status           AccountStatus      @default(ACTIVE)
+  frozenUntil      DateTime?
+  suspendedUntil   DateTime?
+  deletedAt        DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  brand            Brand              @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  manager          User?              @relation("SubBrandManager", fields: [managerId], references: [id])
+  presets          BrandPreset[]
+  products         Product[]
+  posts            Post[]
+  complianceEvents ComplianceEvent[]
+  settings         Setting[]
+  mediaAssets      MediaAsset[]       @relation("SubBrandAssets")
+  analyticsEvents  AnalyticsEvent[]
+
+  @@index([brandId])
+  @@index([managerId])
+  @@index([status, complianceScore])
+  @@map("sub_brands")
+}
+
+model BrandPreset {
+  id                   String      @id @default(cuid())
+  brandId              String?
+  subBrandId           String?
+  name                 String
+  colorFamily          String
+  typography           String
+  darkModePreview      Json
+  lightModePreview     Json
+  buttonStyles         Json
+  marketplaceCardStyle Json
+  approvedAt           DateTime?
+  approvedById         String?
+  deletedAt            DateTime?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  brand                Brand?      @relation(fields: [brandId], references: [id])
+  subBrand             SubBrand?   @relation(fields: [subBrandId], references: [id])
+
+  @@index([brandId, approvedAt])
+  @@index([subBrandId, approvedAt])
+  @@map("brand_presets")
+}
+
+model Organization {
+  id                   String               @id @default(cuid())
+  ownerId              String?
+  name                 String
+  slug                 String               @unique
+  domain               String?
+  plan                 OrganizationPlan     @default(ENTERPRISE)
+  verified             Boolean              @default(true)
+  metadata             Json?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  owner                User?                @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  brands               Brand[]
+  manufacturers        Manufacturer[]
+  suppliers            SupplierRecord[]
+  digitalPassports     DigitalProductPassport[]
+  sustainabilityScores SustainabilityScore[]
+  aiAgentLogs          AiAgentLog[]
+  legalDocuments       LegalDocument[]
+  investorReports      InvestorReport[]
+  agentTasks           AgentTask[]
+  agentMemories        AgentMemory[]
+
+  @@index([ownerId])
+  @@index([plan, verified])
+  @@map("organizations")
+}
+
+model Manufacturer {
+  id                   String                     @id @default(cuid())
+  organizationId       String?
+  name                 String
+  country              String
+  region               String?
+  verificationStatus   PassportVerificationStatus @default(VERIFIED)
+  complianceScore      Int                        @default(85)
+  emissionsFactorKg    Decimal                    @default(12) @db.Decimal(10, 2)
+  metadata             Json?
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  organization         Organization?              @relation(fields: [organizationId], references: [id])
+  suppliers            SupplierRecord[]
+  digitalPassports     DigitalProductPassport[]
+
+  @@index([organizationId])
+  @@index([verificationStatus, complianceScore])
+  @@map("manufacturers")
+}
+
+model SupplierRecord {
+  id                   String                     @id @default(cuid())
+  organizationId       String?
+  manufacturerId       String?
+  name                 String
+  supplierType         String
+  country              String
+  region               String?
+  verificationStatus   PassportVerificationStatus @default(VERIFIED)
+  materials            Json
+  riskScore            Int                        @default(20)
+  sustainabilityScore  Int                        @default(82)
+  metadata             Json?
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  organization         Organization?              @relation(fields: [organizationId], references: [id])
+  manufacturer         Manufacturer?              @relation(fields: [manufacturerId], references: [id])
+
+  @@index([organizationId])
+  @@index([manufacturerId])
+  @@index([supplierType, country])
+  @@map("suppliers")
+}
+
+model Product {
+  id                   String            @id @default(cuid())
+  brandId              String
+  subBrandId           String?
+  name                 String
+  slug                 String            @unique
+  sku                  String            @unique
+  category             String
+  sizeRange            Json?
+  description          String
+  materials            Json
+  price                Decimal           @db.Decimal(10, 2)
+  carbonScore          Int               @default(70)
+  repairabilityScore   Int               @default(70)
+  reuseValue           Decimal           @db.Decimal(10, 2)
+  sustainabilityScore  Int               @default(80)
+  fitGuidance          String
+  careInstructions     String
+  origin               String
+  verified             Boolean           @default(true)
+  deletedAt            DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  brand                Brand             @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  subBrand             SubBrand?         @relation(fields: [subBrandId], references: [id])
+  inventories          Inventory[]
+  circularIds          CircularId[]
+  digitalPassports     DigitalProductPassport[]
+  reviews              Review[]
+  orders               Order[]
+  sustainabilityScores SustainabilityScore[]
+  analyticsEvents      AnalyticsEvent[]
+
+  @@index([brandId, category])
+  @@index([subBrandId, sustainabilityScore])
+  @@index([name, category])
+  @@map("products")
+}
+
+model Inventory {
+  id                    String           @id @default(cuid())
+  productId             String
+  vendorId              String
+  sizeLabel             String
+  condition             ProductCondition
+  quantity              Int              @default(1)
+  availableQuantity     Int              @default(1)
+  price                 Decimal          @db.Decimal(10, 2)
+  trustScore            Int              @default(85)
+  nearbyPickup          Boolean          @default(false)
+  sustainabilityMetadata Json?
+  deletedAt             DateTime?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  product               Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  vendor                User             @relation("InventoryVendor", fields: [vendorId], references: [id], onDelete: Cascade)
+  orders                Order[]
+  circularId            CircularId?
+
+  @@index([productId, condition])
+  @@index([vendorId, nearbyPickup])
+  @@map("inventory")
+}
+
+model Order {
+  id               String       @id @default(cuid())
+  productId        String
+  inventoryId      String?
+  buyerId          String
+  sellerId         String?
+  status           OrderStatus  @default(CHECKOUT_PENDING)
+  quantity         Int          @default(1)
+  currency         String       @default("USD")
+  subtotal         Decimal      @db.Decimal(10, 2)
+  tax              Decimal      @default(0) @db.Decimal(10, 2)
+  shipping         Decimal      @default(0) @db.Decimal(10, 2)
+  total            Decimal      @db.Decimal(10, 2)
+  shippingAddress  Json
+  placedAt         DateTime     @default(now())
+  fulfilledAt      DateTime?
+  deliveredAt      DateTime?
+  cancelledAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  product          Product      @relation(fields: [productId], references: [id])
+  inventory        Inventory?   @relation(fields: [inventoryId], references: [id])
+  buyer            User         @relation("OrderBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller           User?        @relation("OrderSeller", fields: [sellerId], references: [id])
+  reviews          Review[]
+  complianceEvents ComplianceEvent[]
+  analyticsEvents  AnalyticsEvent[]
+
+  @@index([buyerId, status])
+  @@index([sellerId, status])
+  @@index([placedAt, status])
+  @@map("orders")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  orderId    String?
+  authorId   String
+  rating     Int
+  title      String?
+  body       String
+  trustScore Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order      Order?   @relation(fields: [orderId], references: [id])
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([productId, rating])
+  @@map("reviews")
+}
+
+model ImpactPoint {
+  id         String          @id @default(cuid())
+  userId     String
+  type       ImpactPointType
+  points     Int
+  reason     String
+  sourceId   String?
+  metadata   Json?
+  createdAt  DateTime        @default(now())
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@map("impact_points")
+}
+
+model Leaderboard {
+  id          String             @id @default(cuid())
+  key         String             @unique
+  title       String
+  scope       String
+  timeWindow  String
+  refreshedAt DateTime           @default(now())
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  entries     LeaderboardEntry[]
+
+  @@map("leaderboards")
+}
+
+model LeaderboardEntry {
+  id            String      @id @default(cuid())
+  leaderboardId String
+  userId        String
+  points        Int
+  rank          Int
+  metadata      Json?
+  leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([leaderboardId, userId])
+  @@index([leaderboardId, rank])
+  @@map("leaderboard_entries")
+}
+
+model Challenge {
+  id             String              @id @default(cuid())
+  key            String              @unique
+  title          String
+  description    String
+  category       String
+  pointsReward   Int
+  badgeName      String?
+  targetCount    Int                 @default(1)
+  active         Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  progress       ChallengeProgress[]
+
+  @@index([active, category])
+  @@map("challenges")
+}
+
+model ChallengeProgress {
+  id           String     @id @default(cuid())
+  challengeId  String
+  userId       String
+  progress     Int        @default(0)
+  completedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  challenge    Challenge  @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([challengeId, userId])
+  @@index([userId, completedAt])
+  @@map("challenge_progress")
+}
+
+model ComplianceEvent {
+  id              String               @id @default(cuid())
+  userId          String?
+  brandId         String?
+  subBrandId      String?
+  postId          String?
+  orderId         String?
+  resolvedById    String?
+  type            String
+  severity        ComplianceSeverity
+  action          ComplianceActionType
+  scoreDelta      Int
+  riskScore       Int
+  policyRef       String
+  reason          String
+  suggestedFix    String?
+  appealUrl       String?
+  metadata        Json?
+  resolvedAt      DateTime?
+  createdAt       DateTime             @default(now())
+  user            User?                @relation("ComplianceSubject", fields: [userId], references: [id])
+  brand           Brand?               @relation(fields: [brandId], references: [id])
+  subBrand        SubBrand?            @relation(fields: [subBrandId], references: [id])
+  post            Post?                @relation(fields: [postId], references: [id])
+  order           Order?               @relation(fields: [orderId], references: [id])
+  resolvedBy      User?                @relation("ComplianceResolver", fields: [resolvedById], references: [id])
+  trainingAssignments TrainingAssignment[]
+
+  @@index([userId, createdAt])
+  @@index([subBrandId, severity])
+  @@index([action, createdAt])
+  @@map("compliance_events")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId     String?
+  entityType  String
+  entityId    String
+  action      String
+  reason      String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  actor       User?    @relation("AuditActor", fields: [actorId], references: [id])
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+  @@map("audit_logs")
+}
+
+model TrainingModule {
+  id                     String              @id @default(cuid())
+  key                    String              @unique
+  title                  String
+  slug                   String              @unique
+  format                 TrainingFormat
+  category               String
+  durationMinutes        Int
+  contentUrl             String?
+  body                   String?
+  quizSchema             Json?
+  requiredAcknowledgement Boolean            @default(false)
+  active                 Boolean             @default(true)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  assignments            TrainingAssignment[]
+  certifications         Certification[]
+
+  @@index([active, category])
+  @@map("training_modules")
+}
+
+model TrainingAssignment {
+  id                String           @id @default(cuid())
+  moduleId          String
+  userId            String
+  complianceEventId String?
+  progress          Int              @default(0)
+  passed            Boolean          @default(false)
+  acknowledgedAt    DateTime?
+  completedAt       DateTime?
+  assignedAt        DateTime         @default(now())
+  module            TrainingModule   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  complianceEvent   ComplianceEvent? @relation(fields: [complianceEventId], references: [id])
+
+  @@unique([moduleId, userId, complianceEventId])
+  @@index([userId, completedAt])
+  @@map("training_assignments")
+}
+
+model Certification {
+  id              String         @id @default(cuid())
+  moduleId        String
+  userId          String
+  certificateCode String         @unique
+  metadata        Json?
+  issuedAt        DateTime       @default(now())
+  expiresAt       DateTime?
+  revokedAt       DateTime?
+  module          TrainingModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, issuedAt])
+  @@map("certifications")
+}
+
+model CircularId {
+  id                  String             @id @default(cuid())
+  code                String             @unique
+  productId           String
+  inventoryId         String?            @unique
+  origin              String
+  materials           Json
+  fitGuidance         String
+  repairGuide         String
+  authenticityStatus  String
+  ownershipStatus     String
+  careInstructions    String
+  sustainabilityScore Int
+  lifecycleState      String
+  passportData        Json
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  product             Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory           Inventory?         @relation(fields: [inventoryId], references: [id])
+  posts               Post[]
+  scanHistory         ScanHistory[]
+  ownershipHistory    OwnershipHistory[]
+  wardrobeItems       WardrobeItemRecord[]
+  digitalPassports    DigitalProductPassport[]
+
+  @@index([productId])
+  @@index([sustainabilityScore])
+  @@map("circular_ids")
+}
+
+model DigitalProductPassport {
+  id                   String                     @id @default(cuid())
+  organizationId       String?
+  productId            String
+  circularIdId         String?                    @unique
+  manufacturerId       String?
+  passportCode         String                     @unique
+  materialComposition  Json
+  manufacturingOrigin  String
+  supplierChain        Json
+  environmentalImpact  Json
+  lifecycleData        Json
+  verificationStatus   PassportVerificationStatus @default(VERIFIED)
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  organization         Organization?              @relation(fields: [organizationId], references: [id])
+  product              Product                    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  circularId           CircularId?                @relation(fields: [circularIdId], references: [id])
+  manufacturer         Manufacturer?              @relation(fields: [manufacturerId], references: [id])
+  sustainabilityScores SustainabilityScore[]
+
+  @@unique([productId, passportCode])
+  @@index([organizationId])
+  @@index([productId])
+  @@map("digital_product_passports")
+}
+
+model SustainabilityScore {
+  id                     String               @id @default(cuid())
+  organizationId         String?
+  productId              String?
+  passportId             String?
+  normalizedScore        Int
+  transparencyConfidence Int
+  materialsScore         Int
+  emissionsScore         Int
+  transportScore         Int
+  recyclabilityScore     Int
+  durabilityScore        Int
+  categoryBreakdown      Json
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  organization           Organization?        @relation(fields: [organizationId], references: [id])
+  product                Product?             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  passport               DigitalProductPassport? @relation(fields: [passportId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([productId])
+  @@index([passportId])
+  @@index([normalizedScore, transparencyConfidence])
+  @@map("sustainability_scores")
+}
+
+model AiAgentLog {
+  id                String       @id @default(cuid())
+  organizationId    String?
+  agentName         String
+  domain            String
+  taskType          String
+  status            AgentTaskStatus @default(COMPLETED)
+  input             Json
+  output            Json?
+  decision          Json?
+  riskScore         Int          @default(0)
+  governanceVersion String       @default("cfae_prod_2026")
+  correlationId     String?
+  createdAt         DateTime     @default(now())
+  organization      Organization? @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@index([agentName, status])
+  @@map("ai_agent_logs")
+}
+
+model LegalDocument {
+  id               String             @id @default(cuid())
+  organizationId   String?
+  title            String
+  documentType     String
+  status           LegalDocumentStatus @default(DRAFT)
+  jurisdiction     String
+  version          String
+  summary          String
+  body             String
+  generatedByAgent String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  organization     Organization?      @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([documentType, status])
+  @@map("legal_documents")
+}
+
+model InvestorReport {
+  id                       String        @id @default(cuid())
+  organizationId           String?
+  title                    String
+  reportType               String
+  legalReadinessScore      Int
+  complianceReadinessScore Int
+  revenueModel             Json
+  riskSummary              Json
+  metrics                  Json
+  dataRoomExport           Json?
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+  organization             Organization? @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([reportType, createdAt])
+  @@map("investor_reports")
+}
+
+model AgentTask {
+  id             String          @id @default(cuid())
+  organizationId String?
+  agentName      String
+  domain         String
+  taskType       String
+  status         AgentTaskStatus @default(PENDING)
+  priority       Int             @default(3)
+  payload        Json
+  result         Json?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, status])
+  @@index([agentName, createdAt])
+  @@map("agent_tasks")
+}
+
+model AgentMemory {
+  id             String        @id @default(cuid())
+  organizationId String?
+  namespace      String
+  key            String
+  value          Json
+  tags           Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, namespace, key])
+  @@index([organizationId, namespace])
+  @@map("agent_memories")
+}
+
+model WardrobeItemRecord {
+  id            String               @id @default(cuid())
+  userId        String
+  circularIdId  String
+  nickname      String
+  condition     String
+  status        String               @default("active")
+  wearCount     Int                  @default(0)
+  repairCount   Int                  @default(0)
+  lastWornAt    DateTime?
+  acquiredOn    DateTime?
+  purchasePrice Decimal?             @db.Decimal(10, 2)
+  notes         String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  circularId    CircularId           @relation(fields: [circularIdId], references: [id], onDelete: Cascade)
+  events        WardrobeEventRecord[]
+
+  @@unique([userId, circularIdId])
+  @@index([userId, status])
+  @@map("wardrobe_items")
+}
+
+model WardrobeEventRecord {
+  id        String             @id @default(cuid())
+  itemId     String
+  eventType  String
+  note       String?
+  createdAt  DateTime           @default(now())
+  item       WardrobeItemRecord @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, createdAt])
+  @@map("wardrobe_events")
+}
+
+model ScanHistory {
+  id            String     @id @default(cuid())
+  circularIdId  String
+  userId        String?
+  scanType      String
+  locationText  String?
+  metadata      Json?
+  createdAt     DateTime   @default(now())
+  circularId    CircularId @relation(fields: [circularIdId], references: [id], onDelete: Cascade)
+  user          User?      @relation(fields: [userId], references: [id])
+
+  @@index([circularIdId, createdAt])
+  @@index([userId, createdAt])
+  @@map("scan_history")
+}
+
+model OwnershipHistory {
+  id            String     @id @default(cuid())
+  circularIdId  String
+  fromUserId    String?
+  toUserId      String?
+  salePrice     Decimal?   @db.Decimal(10, 2)
+  notes         String?
+  metadata      Json?
+  transferredAt DateTime   @default(now())
+  circularId    CircularId @relation(fields: [circularIdId], references: [id], onDelete: Cascade)
+  fromUser      User?      @relation("OwnershipFrom", fields: [fromUserId], references: [id])
+  toUser        User?      @relation("OwnershipTo", fields: [toUserId], references: [id])
+
+  @@index([circularIdId, transferredAt])
+  @@map("ownership_history")
+}
+
+model Setting {
+  id        String       @id @default(cuid())
+  scope     SettingScope
+  scopeId   String
+  userId    String?
+  brandId   String?
+  subBrandId String?
+  key       String
+  value     Json
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  user      User?        @relation(fields: [userId], references: [id])
+  brand     Brand?       @relation(fields: [brandId], references: [id])
+  subBrand  SubBrand?    @relation(fields: [subBrandId], references: [id])
+
+  @@unique([scope, scopeId, key])
+  @@index([userId, key])
+  @@map("settings")
+}
+
+model Session {
+  id               String        @id @default(cuid())
+  userId           String
+  refreshTokenHash String
+  userAgent        String?
+  ipAddress        String?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  lastActiveAt     DateTime      @default(now())
+  status           SessionStatus @default(ACTIVE)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model MediaAsset {
+  id               String         @id @default(cuid())
+  ownerId          String?
+  brandId          String?
+  subBrandId       String?
+  type             MediaAssetType
+  bucket           String
+  objectKey        String         @unique
+  url              String
+  mimeType         String
+  bytes            Int
+  metadata         Json?
+  watermarkOpacity Int?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  owner            User?          @relation("MediaOwner", fields: [ownerId], references: [id])
+  brand            Brand?         @relation("BrandAssets", fields: [brandId], references: [id])
+  subBrand         SubBrand?      @relation("SubBrandAssets", fields: [subBrandId], references: [id])
+  profileAvatarFor Profile?       @relation("ProfileAvatar")
+  posts            Post[]         @relation("PostMedia")
+
+  @@index([ownerId, type])
+  @@index([brandId, type])
+  @@map("media_assets")
+}
+
+model AnalyticsEvent {
+  id            String   @id @default(cuid())
+  actorId       String?
+  roleKey       RoleKey?
+  brandId       String?
+  subBrandId    String?
+  productId     String?
+  orderId       String?
+  resourceType  String
+  resourceId    String?
+  eventName     String
+  metricValue   Decimal? @db.Decimal(10, 2)
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  actor         User?    @relation(fields: [actorId], references: [id])
+  brand         Brand?   @relation(fields: [brandId], references: [id])
+  subBrand      SubBrand? @relation(fields: [subBrandId], references: [id])
+  product       Product? @relation(fields: [productId], references: [id])
+  order         Order?   @relation(fields: [orderId], references: [id])
+
+  @@index([eventName, createdAt])
+  @@index([roleKey, createdAt])
+  @@index([brandId, createdAt])
+  @@map("analytics_events")
+}

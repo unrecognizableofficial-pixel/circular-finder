@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Passport } from "@/types/platform";
 import { formatCurrency } from "@/lib/format";
 
@@ -38,7 +39,7 @@ export function LivePassportReport({
               {passport.circularityScore}/100 circularity
             </span>
             <span className="rounded-full bg-sand-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-forest-800">
-              {passport.durabilityRating}/10 durability
+              {passport.durabilityRating}/100 durability
             </span>
             <span className="rounded-full bg-sand-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-forest-800">
               {formatCurrency(passport.resaleValueEstimate)} resale estimate
@@ -46,23 +47,65 @@ export function LivePassportReport({
           </div>
 
           <dl className="grid grid-cols-2 gap-3">
+            <Metric label="Authenticity" value={passport.passportStatus.replaceAll("_", " ")} />
             <Metric label="Carbon footprint" value={`${passport.carbonFootprintKg}kg`} />
             <Metric label="Water usage" value={`${Math.round(passport.waterUsageLiters)}L`} />
             <Metric label="Factory" value={passport.factoryLocation} />
             <Metric label="Origin" value={passport.countryOfOrigin} />
           </dl>
 
+          <div className="rounded-[1.5rem] bg-sand-50 p-4">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-forest-700">Materials</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {passport.materialComposition.map((material) => (
+                <span
+                  key={material}
+                  className="rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-700"
+                >
+                  {material}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <div className="rounded-[1.5rem] bg-stone-900 p-4 text-stone-50">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-300">Repair and recycling</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-300">Care, repair, and recovery</p>
             <p className="mt-3 text-sm leading-6 text-stone-200">
-              <strong className="text-stone-50">Repair:</strong> {passport.repairInstructions}
+              <strong className="text-stone-50">Care:</strong> {passport.careInstructions}
             </p>
             <p className="mt-2 text-sm leading-6 text-stone-200">
+              <strong className="text-stone-50">Repair:</strong> {passport.repairInstructions}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-stone-200">
               <strong className="text-stone-50">Recycle:</strong> {passport.recyclingInstructions}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-stone-200">
+              <strong className="text-stone-50">Take-back:</strong> {passport.takeBackProgram}
             </p>
           </div>
 
           {actions}
+        </div>
+      </div>
+
+      <div className="rounded-shell border border-emerald-200 bg-emerald-50/80 p-5 shadow-soft">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-forest-700">Methodology and transparency</p>
+            <h3 className="mt-2 text-xl font-semibold tracking-tight text-stone-900">How Circular Finder explains impact</h3>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-stone-700">
+              Sustainability and circularity guidance is based on materials, emissions estimates, transport distance, recyclability, and durability.
+              These signals help decision-making, but they should be reviewed alongside supplier disclosures, repair guidance, and authenticity details.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/trust#terms-policies" className="rounded-full bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-900 shadow-sm">
+              Terms & Policies
+            </Link>
+            <Link href="/trust#legal-hub" className="rounded-full bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-900 shadow-sm">
+              Legal Hub
+            </Link>
+          </div>
         </div>
       </div>
 

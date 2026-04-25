@@ -1,0 +1,8 @@
+{
+  "/(platform)/dashboard/page": "app/(platform)/dashboard/page.js",
+  "/(platform)/suppliers/page": "app/(platform)/suppliers/page.js",
+  "/(platform)/settings/page": "app/(platform)/settings/page.js",
+  "/(platform)/scanner/page": "app/(platform)/scanner/page.js",
+  "/(platform)/marketplace/page": "app/(platform)/marketplace/page.js",
+  "/(platform)/styling/page": "app/(platform)/styling/page.js"
+}

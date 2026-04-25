@@ -104,6 +104,15 @@ export default function SuppliersPage() {
       title="Realistic global sourcing map with live manufacturer pins"
       description="Explore a more realistic worldview map, search the live supplier network across countries and facility types, and inspect certification-backed sourcing details directly from the pin layer."
       highlights={["Worldview map", "Live pins", "Multi-filter search"]}
+      steps={[
+        "Start with one search term or filter first.",
+        "Pick one supplier from the results or map.",
+        "Use the detail panel to review certifications, materials, and brand links."
+      ]}
+      actions={[
+        { href: "/marketplace", label: "Open Shop" },
+        { href: "/trust", label: "Review Trust Center" }
+      ]}
     >
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <div className="grid gap-4">

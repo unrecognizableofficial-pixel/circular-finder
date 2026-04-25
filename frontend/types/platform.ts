@@ -59,8 +59,10 @@ export type Passport = {
   carbonFootprintKg: number;
   waterUsageLiters: number;
   sustainabilityCertifications: string[];
+  careInstructions: string;
   repairInstructions: string;
   recyclingInstructions: string;
+  takeBackProgram: string;
   durabilityRating: number;
   circularityScore: number;
   resaleValueEstimate: number;

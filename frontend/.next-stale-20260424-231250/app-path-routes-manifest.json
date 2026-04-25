@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/page": "/",
+  "/(platform)/profiles/page": "/profiles",
+  "/(platform)/feed/page": "/feed",
+  "/(platform)/impact/page": "/impact",
+  "/(platform)/profile/page": "/profile",
+  "/(platform)/dashboard/page": "/dashboard",
+  "/(platform)/suppliers/page": "/suppliers",
+  "/(platform)/settings/page": "/settings",
+  "/(platform)/marketplace/page": "/marketplace",
+  "/(platform)/scanner/page": "/scanner",
+  "/(platform)/trust/page": "/trust",
+  "/(platform)/styling/page": "/styling",
+  "/(platform)/sustainability/page": "/sustainability"
+}
