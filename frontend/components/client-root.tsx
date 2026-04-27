@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePlatform } from "@/components/platform-state";
+import { RoleProvider } from "@/lib/role-context";
 
 export default function ClientRoot({ children }: { children: React.ReactNode }) {
   const { themeMode, reducedMotion, accessibilityMode } = usePlatform();
@@ -12,5 +13,9 @@ export default function ClientRoot({ children }: { children: React.ReactNode }) 
     document.documentElement.dataset.accessibility = accessibilityMode ? "high" : "standard";
   }, [accessibilityMode, reducedMotion, themeMode]);
 
-  return <>{children}</>;
+  return (
+    <RoleProvider>
+      {children}
+    </RoleProvider>
+  );
 }
