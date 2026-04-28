@@ -350,7 +350,7 @@ export default function DemoPreviewRemotionPlayer({ onOpenRoles }: DemoPreviewRe
       circularityScore: passport?.circularityScore ?? 95,
       complianceReadiness: 92,
       enterpriseReadiness: 91,
-      imageUrl: featuredListing?.imageUrl ?? product?.imageUrl ?? "/circular-finder/images/trench.svg",
+      imageUrl: featuredListing?.imageUrl ?? product?.imageUrl ?? "/circular-finder/circular-finder/images/trench.svg",
       impactPoints,
       inventoryCount: bootstrap?.user?.insights?.inventoryCount ?? 3,
       listingPrice: featuredListing?.price ?? 280,

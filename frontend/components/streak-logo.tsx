@@ -130,7 +130,7 @@ export function StreakLogo({
       >
         <div className="absolute inset-0 bg-gradient-to-br from-white/28 via-transparent to-stone-950/10" />
         <Image
-          src="/branding/circular-finder-streak-logo.svg"
+          src="/circular-finder/branding/circular-finder-streak-logo.svg"
           alt="Circular Finder logo used as the streak symbol"
           fill
           priority={priority}
