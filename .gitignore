@@ -22,3 +22,18 @@ backend/.turbo/
 *.mov
 *.mov
 *.mp4
+
+Video References/
+.mov
+.mp4
+
+.tmp_video-ref/
+tmp-Video-ref/
+.tmp_video-ref/
+Video References/
+.mov
+.mp4
+*.mov.png
+.github/workflows/backend-ci.yml
+.github/workflows/.yml
+.github/workflows/.yaml
