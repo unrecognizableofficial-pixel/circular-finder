@@ -99,3 +99,22 @@ The Next.js frontend is configured for static export through GitHub Actions and 
 - Public URL pattern: `https://unrecognizableofficial-pixel.github.io/circular-finder/`
 
 The Pages build uses `NEXT_PUBLIC_STATIC_DEMO=true`, so the public site falls back to local demo data instead of requiring the FastAPI backend.
+## Deploy
+
+This repository includes a `render.yaml` blueprint for deploying the full stack on Render:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/unrecognizableofficial-pixel/circular-finder)
+
+- `circular-finder-api`: FastAPI backend
+- `circular-finder-web`: Next.js frontend
+- `circular-finder-db`: PostgreSQL database
+
+The frontend proxies `/api/*` and `/static/*` to the backend service, so the deployed app can run behind a single public site URL instead of exposing separate frontend and backend URLs to end users.
+
+To deploy from GitHub:
+
+1. Sign in to Render.
+2. Create a new Blueprint and point it at this repository.
+3. Render will provision the database and both web services from `render.yaml`.
+
+For local frontend development through the same-origin proxy model, the frontend expects `BACKEND_ORIGIN=127.0.0.1:8000` as shown in `frontend/.env.example`.
