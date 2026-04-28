@@ -254,7 +254,7 @@ export default function DemoPreviewPlayer({ autoPlayOnMount = false, onOpenRoles
       enterpriseReadiness: 91,
       expectedDaysToSell: featuredListing?.expectedDaysToSell ?? 5,
       factoryLocation: passport?.factoryLocation ?? "Da Nang, Vietnam",
-      imageUrl: featuredListing?.imageUrl ?? product?.imageUrl ?? "/images/trench.svg",
+      imageUrl: featuredListing?.imageUrl ?? product?.imageUrl ?? "/circular-finder/images/trench.svg",
       impactPoints,
       inventoryCount: wardrobeInsights?.inventoryCount ?? 3,
       lastWorn: formatDate(wardrobeItem?.lastWornAt ?? "2026-04-18T00:00:00Z"),

@@ -264,7 +264,7 @@ const products: Product[] = [
     materialsSummary: "Organic cotton twill with TENCEL lining",
     msrp: 420,
     productStory: "Engineered for repeat wear with modular buttons, tailored structure, and repair-first detailing.",
-    imageUrl: "/images/trench.svg",
+    imageUrl: "/circular-finder/images/trench.svg",
     styleTags: ["capsule", "tailored", "minimal"],
     brand: brands[0]
   },
@@ -279,7 +279,7 @@ const products: Product[] = [
     materialsSummary: "Organic cotton poplin with structured tailoring finish",
     msrp: 180,
     productStory: "A polished core shirt designed for long-life office rotation with verified tailoring support.",
-    imageUrl: "/images/shirt.svg",
+    imageUrl: "/circular-finder/images/shirt.svg",
     styleTags: ["tailored", "office", "core"],
     brand: brands[1]
   },
@@ -294,7 +294,7 @@ const products: Product[] = [
     materialsSummary: "Heavy organic cotton canvas with repairable hardware",
     msrp: 145,
     productStory: "Built for daily carry with reinforced straps, modular hardware, and a passport-ready repair path.",
-    imageUrl: "/images/tote.svg",
+    imageUrl: "/circular-finder/images/tote.svg",
     styleTags: ["utility", "carry", "daily"],
     brand: brands[2]
   }
@@ -408,7 +408,7 @@ const marketplace: MarketplaceListing[] = [
     predictedPrice: 275,
     expectedDaysToSell: 5,
     status: "live",
-    imageUrl: "/images/trench.svg",
+    imageUrl: "/circular-finder/images/trench.svg",
     seller: { id: 1, name: "Studio House 01" },
     product: products[0],
     passport: hydratePassport(passports[0], products[0])
@@ -423,7 +423,7 @@ const marketplace: MarketplaceListing[] = [
     predictedPrice: 118,
     expectedDaysToSell: 4,
     status: "live",
-    imageUrl: "/images/shirt.svg",
+    imageUrl: "/circular-finder/images/shirt.svg",
     seller: { id: 2, name: "Aureline Archive" },
     product: products[1],
     passport: hydratePassport(passports[1], products[1])
@@ -438,7 +438,7 @@ const marketplace: MarketplaceListing[] = [
     predictedPrice: 96,
     expectedDaysToSell: 6,
     status: "live",
-    imageUrl: "/images/tote.svg",
+    imageUrl: "/circular-finder/images/tote.svg",
     seller: { id: 3, name: "Loop Standard Archive" },
     product: products[2],
     passport: hydratePassport(passports[2], products[2])
